@@ -4,15 +4,15 @@ def main():
     args = sys.argv
     argValidateCheck(args)
 
-
+# 引数チェック
 def argValidateCheck(argument):
     if len(argument) < 4:
         raise ValueError("Usage: python3 file_manipulator.py <arg1> <arg2> <arg3>(If arg1 is 'replace-string', add <arg4>)")
     elif argument[1] == "replace-string" and len(argument) < 5:
         raise ValueError("Usage: python3 file_manipulator.py <arg1> <arg2> <arg3> <arg4>")
 
-
-def funcCheck(args):
+# 引数１の値をもとに関数を実行
+def executeFunc(args):
     func = args[1]
 
     if func == "reverse":
@@ -24,7 +24,7 @@ def funcCheck(args):
     elif func == "replace-string":
         replaceString(args[2], args[3], args[4])
 
-
+# インプットファイルの文字を反転する
 def reverse(inputpath, outputpath):
     list = []
     with open(inputpath, 'r') as input:
@@ -36,7 +36,7 @@ def reverse(inputpath, outputpath):
                 output.write(list[i][j])
             output.write("\n")
 
-
+# インプットファイルの内容をコピーする
 def copy(inputpath, outputpath):
     with open(inputpath, 'r') as input:
         contents = input.read()
@@ -44,15 +44,19 @@ def copy(inputpath, outputpath):
     with open(outputpath, 'w') as output:
         output.write(contents)
 
-
+# インプットファイルの内容を指定した回数複製する
 def duplicateContents(inputpath, n):
     with open(inputpath, 'w') as input:
         contents = input.read()
         for i in range(n+1):
             input.write(contents)
 
-
+# インプットファイル内の指定した文字列を指定した文字列に変換する
 def replaceString(inputpath, targetStr, replaceStr):
+    lines = []
     with open(inputpath, 'r') as input:
-        
-
+        lines = input.read().splitlines()
+    
+    for i in range(len(lines)):
+        for j in range(len(lines[i])):
+            
