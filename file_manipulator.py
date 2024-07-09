@@ -3,6 +3,8 @@ import sys
 def main():
     args = sys.argv
     argValidateCheck(args)
+    executeFunc(args)
+
 
 # 引数チェック
 def argValidateCheck(argument):
@@ -57,6 +59,20 @@ def replaceString(inputpath, targetStr, replaceStr):
     with open(inputpath, 'r') as input:
         lines = input.read().splitlines()
     
+    res = []
     for i in range(len(lines)):
-        for j in range(len(lines[i])):
-            
+        tgt = lines[i].find(targetStr)
+        if tgt != -1:
+            while tgt != -1:
+                content = lines[i][:tgt] + replaceStr
+                tgt = lines[i][tgt + len(targetStr) + 1].find(targetStr)
+                res.append(content)
+            res.append(lines[i][tgt + 1:])
+        else:
+            res.append(lines[i])
+        res.append('\n')
+    
+    with open(inputpath, 'w') as input:
+        input.write(res)
+
+main()
