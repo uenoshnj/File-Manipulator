@@ -8,10 +8,22 @@ def main():
 
 # 引数チェック
 def argValidateCheck(argument):
-    if len(argument) < 4:
+    argLength = len(argument)
+
+    # 引数の個数チェック
+    if argLength < 4:
         raise ValueError("Usage: python3 file_manipulator.py <arg1> <arg2> <arg3>(If arg1 is 'replace-string', add <arg4>)")
-    elif argument[1] == "replace-string" and len(argument) < 5:
-        raise ValueError("Usage: python3 file_manipulator.py <arg1> <arg2> <arg3> <arg4>")
+    
+    # 1つめの引数のチェック
+    arg1Lists = ["reverse", "copy", "duplicate-contents", "replace-string"]
+    arg1 = argument[1]
+    if arg1 not in arg1Lists:
+        raise ValueError(f"invalid argument '{arg1}'. Must be one of 'reverse', 'copy', 'duplicate-contents', 'replace-string'.")
+    
+    # 1つめの引数がreplace-stringの場合のチェック
+    if arg1 == "replace-string" and argLength < 5:
+        raise ValueError(f"Usage: python3 file_manipulator.py {arg1} <arg2> <arg3> <arg4>")
+
 
 # 引数１の値をもとに関数を実行
 def executeFunc(args):
@@ -26,6 +38,7 @@ def executeFunc(args):
     elif func == "replace-string":
         replaceString(args[2], args[3], args[4])
 
+
 # インプットファイルの文字を反転する
 def reverse(inputpath, outputpath):
     list = []
@@ -38,6 +51,7 @@ def reverse(inputpath, outputpath):
                 output.write(list[i][j])
             output.write("\n")
 
+
 # インプットファイルの内容をコピーする
 def copy(inputpath, outputpath):
     with open(inputpath, 'r') as input:
@@ -46,33 +60,27 @@ def copy(inputpath, outputpath):
     with open(outputpath, 'w') as output:
         output.write(contents)
 
+
 # インプットファイルの内容を指定した回数複製する
 def duplicateContents(inputpath, n):
-    with open(inputpath, 'w') as input:
+    with open(inputpath, 'r') as input:
         contents = input.read()
-        for i in range(n+1):
+        
+    with open(inputpath, 'w') as input:
+        for i in range(int(n)+1):
             input.write(contents)
 
-# インプットファイル内の指定した文字列を指定した文字列に変換する
+
+# インプットファイル内の指定した文字列を別の指定した文字列に変換する
 def replaceString(inputpath, targetStr, replaceStr):
-    lines = []
+    print(targetStr)
+    print(replaceStr)
     with open(inputpath, 'r') as input:
-        lines = input.read().splitlines()
+        contents = input.read()
     
-    res = []
-    for i in range(len(lines)):
-        tgt = lines[i].find(targetStr)
-        if tgt != -1:
-            while tgt != -1:
-                content = lines[i][:tgt] + replaceStr
-                tgt = lines[i][tgt + len(targetStr) + 1].find(targetStr)
-                res.append(content)
-            res.append(lines[i][tgt + 1:])
-        else:
-            res.append(lines[i])
-        res.append('\n')
-    
+    newContents = contents.replace(targetStr, replaceStr)
+
     with open(inputpath, 'w') as input:
-        input.write(res)
+        input.write(newContents)
 
 main()
